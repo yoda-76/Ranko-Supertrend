@@ -87,8 +87,10 @@ const check_entry_positions = async (symbol) => {
   try {
       const { data } = await axios.request(options);
       //filter positions with symbol and check if positions are ok or not [To Be DONE...]
-      console.log(data, quantity);
-      return true //change this hard coded value [To Be DONE...]
+      const position = (data.filter(position => position.tradingSymbol === symbol))[0]; 
+      if(!position || position.netQty==0) return true
+      // console.log(data, quantity);
+      return false; //change this hard coded value [To Be DONE...]
     } catch (error) {
       console.error(error);
     }
@@ -141,15 +143,18 @@ app.post('/place-order', async(req, res) => {
 
         if(!config){
             console.log("Invalid symbol");
-           return res.status(400).send("Invalid symbol");
+           return res.status(400).send("1 Invalid symbol");
           }
        
         const prev=await client.get(config[0])
         if(!prev){
-            console.log("Invalid symbol");
-           return res.status(400).send("Invalid symbol");
+          await client.set(config[0], 0);
         }
-        if(parseInt(prev)==1){
+        // if(!prev){
+        //     console.log("Invalid symbol");
+        //    return res.status(400).send("Invalid symbol");
+        // }
+        if( parseInt(prev)==1){
              //check if the positions are ok or not
              const position_ok = await check_positions(config[0],config[1])
              console.log(position_ok);
