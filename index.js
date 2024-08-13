@@ -8,8 +8,10 @@ const access_token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGF
 const app = express();
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+app.get('/', async (req, res) => {
+  const market_status = await client.get("market_open")
+  const squared_off = await client.get("squared_off")
+  res.json({Ranko: market_status, squared_off})
 });
 
 const placeOrder = async (tradingSymbol, transactionType, securityId, quantity) => {
@@ -125,6 +127,36 @@ const Squaring_off = async (symbol) => {
       console.error(error);
     }
 }
+
+const Squaring_off_all_positions = async () => {
+  const options = {
+    method: 'GET',
+    url: 'https://api.dhan.co/positions', 
+    headers: {
+      'access-token': access_token,
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
+  }
+  try {
+
+    const { data } = await axios.request(options);
+    console.log("object",data);
+      // const position = (data.filter(position => position.tradingSymbol === symbol))[0];
+      data.map(async position => {
+        console.log("position",position);
+        if(position.netQty > 0) {
+          await placeOrder(position.tradingSymbol, "SELL", position.securityId, position.netQty);
+        }else if(position.netQty < 0){
+          await placeOrder(position.tradingSymbol, "BUY", position.securityId, -position.netQty);
+        }
+      })
+      //filter positions with symbol and square off all positions [To Be DONE...]
+      return true //return true if all suqre off orders are placed successfully [To Be DONE...]
+    } catch (error) {
+      console.error(error);
+    }
+}
       
 
 app.post('/place-order', async(req, res) => {
@@ -224,21 +256,34 @@ app.listen(5000, ()=>{
     console.log("Server is running on port 5000");
 });
 
+// .............................CRON-JOB................................
 
-// {
-//     dhanClientId: '1103850320',
-//     transactionType: 'BUY',
-//     exchangeSegment: 'NSE_EQ',
-//     productType: 'INTRADAY',
-//     orderType: 'MARKET',
-//     validity: 'DAY',
-//     tradingSymbol: symbol,
-//     securityId: '11915',
-//     quantity: 1,
-//     disclosedQuantity: 0,
-//     price: 0
-//   }
+const cron = require('node-cron');
 
+// Define the function you want to trigger
+function triggerFunction() {
+    console.log('Function triggered at', new Date().toLocaleTimeString());
+    // Your function logic here
+}
 
-//5, 6, 7, 8, 9, 10 ,11, 12, 1, 2, 3, 4
-//c2t-equity  test&update-ranko
+// Schedule the function to run at 9:30 AM every day
+cron.schedule('30 9 * * *', async () => {
+  await client.set("market_open",1)
+  console.log("Market Opened");
+  await client.set("squared_off",0)
+});
+
+// Schedule the function to run at 3:00 PM every day
+cron.schedule('0 15 * * *', async() => {
+  await client.set("market_open",0)
+  console.log("Market Closed");
+  //square off all positions
+  const isSquaredOff = await Squaring_off_all_positions()
+  if(isSquaredOff){
+    await client.set("squared_off",1)
+    console.log("All positions are squared off");
+  }else{
+    console.log("All positions are not squared off");
+  }
+
+});
