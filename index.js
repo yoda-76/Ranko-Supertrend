@@ -4,7 +4,7 @@ const Redis = require("ioredis")
 const client = new Redis("rediss://default:AeQcAAIjcDE0MjMyYTMzNDEwYzc0Y2ZiOWFkMzk1M2JlZTgwM2IwMHAxMA@helpful-polliwog-58396.upstash.io:6379");
 const quantity = 1;
 let applied_quantity = quantity
-const access_token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGFydG5lcklkIjoiIiwiZXhwIjoxNzIzMjQxNjA2LCJ0b2tlbkNvbnN1bWVyVHlwZSI6IlNFTEYiLCJ3ZWJob29rVXJsIjoiIiwiZGhhbkNsaWVudElkIjoiMTEwMzg1MDMyMCJ9.yCMQ2IZnz6f8Rw8Aky_ixJkxsMSeZAgcEvzkSvomk1iiZvJawlhAFx0bcZDdkFT5aKgG3TfSqzgQbAzXxpqHSQ"
+const access_token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGFydG5lcklkIjoiIiwiZXhwIjoxNzI2MTE0NjA0LCJ0b2tlbkNvbnN1bWVyVHlwZSI6IlNFTEYiLCJ3ZWJob29rVXJsIjoiIiwiZGhhbkNsaWVudElkIjoiMTEwMzg1MDMyMCJ9.L0MWGgxKiDb1d2bOiMtMQ_h9U6jVQ6JupAqVJrrVSENTZQicAzmJ7S0f6eDdUi8G_P7doiRJRF5wKuFAvqxApw"
 const app = express();
 app.use(express.json());
 
@@ -217,7 +217,6 @@ app.get("/market-toggle",async ( req, res)=>{
     await client.set("market_open",1)
     return res.send("Ranko : ON")
   }
-  // res.send("OK")
 
 })
 
