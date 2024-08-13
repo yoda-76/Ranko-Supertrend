@@ -14,3 +14,18 @@
 //     "boProfitValue": 0,
 //     "boStopLossValue": 0
 // }
+
+
+
+
+// {
+//     "config":["OIL","BUY", 17438]
+// }
+
+// {
+//     "config":["MAZDOCK","BUY", 509]
+// }
+
+// {
+//     "config":["YESBANK","BUY", 11915]
+// }

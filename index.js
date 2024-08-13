@@ -206,17 +206,18 @@ app.post('/place-order', async(req, res) => {
 
 });
 
-app.get("/market-toggle",async ( res)=>{
+app.get("/market-toggle",async ( req, res)=>{
   console.log("object");
-  const market_status = await client.get(); 
+  const market_status = await client.get("market_open"); 
   console.log("market_status",market_status);
-  if(parseInt(market_status)==1){
+  if(market_status && parseInt(market_status)==1){
     await client.set("market_open",0)
-    return res.send("Market Closed")
+    return res.send("Ranko : OFF")
   }else{
     await client.set("market_open",1)
-    return res.send("Market opened")
+    return res.send("Ranko : ON")
   }
+  // res.send("OK")
 
 })
 
