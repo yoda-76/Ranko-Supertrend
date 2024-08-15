@@ -244,9 +244,24 @@ app.get("/market-toggle",async ( req, res)=>{
   console.log("market_status",market_status);
   if(market_status && parseInt(market_status)==1){
     await client.set("market_open",0)
-    return res.send("Ranko : OFF")
+  console.log("Market Closed");
+  //square off all positions
+  const isSquaredOff = await Squaring_off_all_positions()
+  if(isSquaredOff){
+    await client.set("squared_off",1)
+    console.log("All positions are squared off");
+    return res.send("Ranko : OFF \n All positions are squared off")
+    
+  }else{
+    console.log("All positions are not squared off");
+    return res.send("Ranko : OFF \n All positions are not squared off")
+  }
+
+    
   }else{
     await client.set("market_open",1)
+    console.log("Market Opened");
+    await client.set("squared_off",0)
     return res.send("Ranko : ON")
   }
 
