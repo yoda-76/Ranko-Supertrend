@@ -268,7 +268,7 @@ function triggerFunction() {
 }
 
 // Schedule the function to run at 9:30 AM every day
-cron.schedule('53 2 * * *', async () => {
+cron.schedule('0 22 * * *', async () => {
   await client.set("market_open",1)
   console.log("Market Opened");
   await client.set("squared_off",0)
