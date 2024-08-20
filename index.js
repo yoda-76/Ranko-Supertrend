@@ -1,10 +1,10 @@
 const express = require('express');
 const axios = require('axios').default;
 const Redis = require("ioredis")
-const client = new Redis("rediss://default:AeQcAAIjcDE0MjMyYTMzNDEwYzc0Y2ZiOWFkMzk1M2JlZTgwM2IwMHAxMA@helpful-polliwog-58396.upstash.io:6379");
+const client = new Redis("your-redis-connection-url");
 const quantity = 1;
 let applied_quantity = quantity
-const access_token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkaGFuIiwicGFydG5lcklkIjoiIiwiZXhwIjoxNzI2MTE0NjA0LCJ0b2tlbkNvbnN1bWVyVHlwZSI6IlNFTEYiLCJ3ZWJob29rVXJsIjoiIiwiZGhhbkNsaWVudElkIjoiMTEwMzg1MDMyMCJ9.L0MWGgxKiDb1d2bOiMtMQ_h9U6jVQ6JupAqVJrrVSENTZQicAzmJ7S0f6eDdUi8G_P7doiRJRF5wKuFAvqxApw"
+const access_token="your-dhan-access-token"
 const app = express();
 app.use(express.json());
 
